@@ -1,3 +1,13 @@
+## Installation Guide
+<p>1.Run <code>git clone https://github.com/yosrio/LaravelStarterKit.git</code></p>
+<p>2.Run <code>composer install</code></p>
+<p>3.Run <code>cp .env.example .env</code></p>
+<p>4.Run <code>php artisan key:generate</code></p>
+<p>5.Change database cred at .env</p>
+<p>6.Run <code>php artisan migrate</code></p>
+<p>7.Run <code>php artisan serve</code></p>
+
+<hr>
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
