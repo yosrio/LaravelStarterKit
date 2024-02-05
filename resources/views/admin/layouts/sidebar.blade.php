@@ -14,75 +14,45 @@
   </div> -->
   <nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-      <li class="nav-item">
-        <a href="" class="nav-link">
-          <i class="nav-icon fas fa-tachometer-alt"></i>
-          <p> Dashboard </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link">
-          <i class="nav-icon fas fa-users"></i>
-          <p> User Management <i class="right fas fa-angle-left"></i>
-          </p>
-        </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-eye nav-icon"></i>
-              <p>Show Users</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Add New User</p>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link">
-          <i class="nav-icon fas fa-user-tag"></i>
-          <p> Role Management <i class="right fas fa-angle-left"></i>
-          </p>
-        </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-eye nav-icon"></i>
-              <p>Show Roles</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-plus-circle nav-icon"></i>
-              <p>Add New Roles</p>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link">
-          <i class="nav-icon fas fa-sliders-h"></i>
-          <p> Settings <i class="right fas fa-angle-left"></i>
-          </p>
-        </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-cog nav-icon"></i>
-              <p>Configuration</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-link nav-icon"></i>
-              <p>Integration</p>
-            </a>
-          </li>
-        </ul>
-      </li>
+      @foreach ($menuList as $item)
+        @php
+          $permission = json_decode($currentUserRole['permission'], 1);
+          if (!array_key_exists(strtolower($item->menu_group), $permission)) {
+              continue;
+          }
+          $menuItem = json_decode($item->menu_item, 1);
+        @endphp
+        <li class="nav-item">
+          <a href="{{ $menuItem['route'] == '#' ? $menuItem['route'] : route($menuItem['route']) }}" class="nav-link">
+            <i class="{{ $menuItem['icon'] }} nav-icon"></i>
+            <p>{{ $menuItem['menu_title'] }}
+              @if (array_key_exists('items', $menuItem))
+                <i class="right fas fa-angle-left"></i>
+              @endif
+            </p>
+          </a>
+          @if (array_key_exists('items', $menuItem))
+            @foreach ($menuItem['items'] as $menu)
+              @php
+                $permissionItem = $permission[strtolower($item->menu_group)];
+              @endphp
+              @if (!in_array($menu['menu_id'], $permissionItem))
+                @php
+                  continue;
+                @endphp
+              @endif
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route($menu['route']) }}" class="nav-link">
+                    <i class="{{ $menu['icon'] }} nav-icon"></i>
+                    <p>{{ $menu['menu_title'] }}</p>
+                  </a>
+                </li>
+              </ul>
+            @endforeach
+          @endif
+        </li>
+      @endforeach
     </ul>
   </nav>
 </div>
