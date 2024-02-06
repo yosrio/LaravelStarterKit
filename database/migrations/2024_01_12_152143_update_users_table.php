@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('phone')->unique()->nullable();
             $table->string('address')->nullable();
+            $table->boolean('status')->default(0);
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
         });
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->dropColumn('username');
             $table->dropColumn('phone');
             $table->dropColumn('address');
+            $table->dropColumn('status');
             $table->dropForeign('role_id');
             $table->dropColumn('role_id');
         });

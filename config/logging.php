@@ -58,6 +58,12 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'exceptions' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/exceptions.log'),
+            'level' => 'debug',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
