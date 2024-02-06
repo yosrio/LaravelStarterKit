@@ -1,4 +1,4 @@
-<a href="index3.html" class="brand-link" style="text-align: center;">
+<a href="{{ route('dashboard') }}" class="brand-link" style="text-align: center;text-decoration: none;">
   <span class="brand-text font-weight-light">Admin</span>
 </a>
 <div class="sidebar">

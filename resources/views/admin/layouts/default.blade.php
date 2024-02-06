@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/daterangepicker/daterangepicker.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/summernote/summernote-bs4.min.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+  @yield('css')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -31,9 +34,9 @@
       @yield('content')
     </div>
 
-    <footer class="main-footer">
+    <!-- <footer class="main-footer">
         @include('admin.layouts.footer')
-    </footer>
+    </footer> -->
   </div>
 
   <script src="{{ asset('admin/assets/plugins/jquery/jquery.min.js') }}"></script>
@@ -53,6 +56,9 @@
   <script src="{{ asset('admin/assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
   <script src="{{ asset('admin/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
   <script src="{{ asset('admin/assets/dist/js/adminlte.js') }}"></script>
-  <!-- <script src="{{ asset('admin/assets/dist/js/pages/dashboard3.js') }}"></script> -->
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+  @yield('scripts')
 </body>
 </html>

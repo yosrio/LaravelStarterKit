@@ -38,7 +38,10 @@ Route::group([
     'as' => 'users',
     ], function () {
         Route::get('/', [Admin\UserController::class, 'index']);
+        Route::post('/', [Admin\UserController::class, 'save'])->name('_save');
         Route::get('/add', [Admin\UserController::class, 'addOrUpdate'])->name('_add');
+        Route::get('/delete/{id}', [Admin\UserController::class, 'delete'])->name('_delete');
+        Route::get('/update/{id}', [Admin\UserController::class, 'addOrUpdate'])->name('_update');
 });
 
 Route::group([
@@ -47,7 +50,10 @@ Route::group([
     'as' => 'roles',
     ], function () {
         Route::get('/', [Admin\RoleController::class, 'index']);
+        Route::post('/', [Admin\RoleController::class, 'save'])->name('_save');
         Route::get('/add', [Admin\RoleController::class, 'addOrUpdate'])->name('_add');
+        Route::get('/delete/{id}', [Admin\RoleController::class, 'delete'])->name('_delete');
+        Route::get('/update/{id}', [Admin\RoleController::class, 'addOrUpdate'])->name('_update');
 });
 
 Route::group([
