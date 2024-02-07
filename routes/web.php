@@ -58,6 +58,18 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth'],
+    'prefix' => '/menus',
+    'as' => 'menus',
+    ], function () {
+        Route::get('/', [Admin\MenuController::class, 'index']);
+        Route::post('/', [Admin\MenuController::class, 'save'])->name('_save');
+        Route::get('/add', [Admin\MenuController::class, 'addOrUpdate'])->name('_add');
+        Route::get('/delete/{id}', [Admin\MenuController::class, 'delete'])->name('_delete');
+        Route::get('/update/{id}', [Admin\MenuController::class, 'addOrUpdate'])->name('_update');
+});
+
+Route::group([
+    'middleware' => ['auth'],
     'prefix' => '/settings',
     'as' => 'settings',
     ], function () {
