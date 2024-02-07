@@ -87,7 +87,7 @@ class UserController extends \App\Http\Controllers\Controller
             Log::channel('exceptions')->warning(implode('\n', $validator->errors()->all()));
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        
+
         $status = $request->status == 'on' ? true : false;
         DB::beginTransaction();
         try {
@@ -112,11 +112,10 @@ class UserController extends \App\Http\Controllers\Controller
                     }
                     $user->password = Hash::make($request->password);
                 }
-                $successMessage = 'Successfully Update User.';
-                $failedMessage = 'Something went wrong. Failed to update user!';
-            }
-             else {
-                $user = new User;
+                $successMessage = 'Successfully edit user.';
+                $failedMessage = 'Something went wrong. Failed to edit user!';
+            } else {
+                $user = new User();
                 $validator = Validator::make($request->all(), [
                     'password' => [
                         'required',
@@ -131,22 +130,22 @@ class UserController extends \App\Http\Controllers\Controller
                     Log::channel('exceptions')->warning(implode('\n', $validator->errors()->all()));
                     return redirect()->back()->withErrors($validator)->withInput();
                 }
-                
+
                 $user->name = $request->name;
                 $user->username = $request->username;
                 $user->email = $request->email;
                 $user->password = Hash::make($request->password);
                 $user->status = $status;
-                $successMessage = 'Successfully Add User.';
+                $successMessage = 'Successfully add user.';
                 $failedMessage = 'Something went wrong. Failed to add user!';
-             }
-             $roles = Roles::find($request->role_id);
-             $user->role_id = $roles->id;
-             $user->phone = $request->phone;
-             if ($user->save()) {
-                 DB::commit();
-                 return redirect(route('users'))->with('success', $successMessage);
-             }
+            }
+            $roles = Roles::find($request->role_id);
+            $user->role_id = $roles->id;
+            $user->phone = $request->phone;
+            if ($user->save()) {
+                DB::commit();
+                return redirect(route('users'))->with('success', $successMessage);
+            }
         } catch (\Exception $e) {
             DB::rollback();
             Log::channel('exceptions')->error($e);

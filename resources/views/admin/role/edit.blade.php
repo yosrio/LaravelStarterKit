@@ -51,23 +51,21 @@
                                                     <td>{{ $menu['menu_title'] }}</td>
                                                     <td>
                                                         <div class="form-group mb-0">
-                                                            <div class="custom-control custom-switch">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    class="custom-control-input"
-                                                                    name="allow[]"
-                                                                    value="{{ strtolower($item['menu_group']) . '|' . $menu['menu_id'] }}"
-                                                                    @if(isset($permission) && array_key_exists(strtolower($item->menu_group), $permission))
-                                                                        @php
-                                                                            $permissionItem = $permission[strtolower($item->menu_group)];
-                                                                        @endphp
-                                                                        @if(in_array($menu['menu_id'], $permissionItem))
-                                                                            checked
-                                                                        @endif
+                                                        <label>
+                                                            <input
+                                                                type="checkbox"
+                                                                name="allow[]"
+                                                                value="{{ strtolower($item['menu_group']) . '|' . $menu['menu_id'] }}"
+                                                                @if(isset($permission) && array_key_exists(strtolower($item->menu_group), $permission))
+                                                                    @php
+                                                                        $permissionItem = $permission[strtolower($item->menu_group)];
+                                                                    @endphp
+                                                                    @if(in_array($menu['menu_id'], $permissionItem))
+                                                                        checked
                                                                     @endif
-                                                                >
-                                                                <label class="custom-control-label" for="allows"></label>
-                                                            </div>
+                                                                @endif
+                                                            >
+                                                        </label>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -76,25 +74,21 @@
                                             <tr>
                                                 <td>{{ $menuItem['menu_title'] }}</td>
                                                 <td>
-                                                    <div class="form-group mb-0">
-                                                        <div class="custom-control custom-switch">
-                                                            <input
-                                                                type="checkbox"
-                                                                class="custom-control-input"
-                                                                name="allow[]"
-                                                                value="{{ strtolower($item['menu_group']) . '|' . $menuItem['menu_id'] }}"
-                                                                @if(isset($permission) && array_key_exists(strtolower($item->menu_group), $permission))
-                                                                    @php
-                                                                        $permissionItem = $permission[strtolower($item->menu_group)];
-                                                                    @endphp
-                                                                    @if(in_array($menuItem['menu_id'], $permissionItem))
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            name="allow[]"
+                                                            value="{{ strtolower($item['menu_group']) . '|' . $menuItem['menu_id'] }}"
+                                                            @if(isset($permission) && array_key_exists(strtolower($item->menu_group), $permission))
+                                                                @php
+                                                                    $permissionItem = $permission[strtolower($item->menu_group)];
+                                                                @endphp
+                                                                @if(in_array($menuItem['menu_id'], $permissionItem))
                                                                         checked
-                                                                    @endif
                                                                 @endif
-                                                            >
-                                                            <label class="custom-control-label" for="allows"></label>
-                                                        </div>
-                                                    </div>
+                                                            @endif
+                                                        >
+                                                    </label>
                                                 </td>
                                             </tr>
                                         @endif
