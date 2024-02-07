@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * RoleController
+ *
+ * PHP version 8.1
+ *
+ * @package  App\Http\Controllers\Admin
+ * @category Controllers
+ * @author   Yos Rio
+ * @license  http://opensource.org/licenses/MIT MIT License
+ */
+
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
@@ -7,12 +18,17 @@ use App\Models\Roles;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * RoleController
+ *
+ * This controller handles role.
+ */
 class RoleController extends \App\Http\Controllers\Controller
 {
     /**
      * Method index
      *
-     * @return string|null
+     * @return void
      */
     public function index()
     {
@@ -21,7 +37,7 @@ class RoleController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * Method index
+     * Method addOrUpdate
      *
      * @param int|string|null $id
      *
@@ -41,13 +57,13 @@ class RoleController extends \App\Http\Controllers\Controller
         }
         return view('admin.role.edit');
     }
-    
+
     /**
      * Method save
      *
      * @param Request $request
      *
-     * @return string|null
+     * @return void
      */
     public function save(Request $request)
     {
@@ -60,11 +76,17 @@ class RoleController extends \App\Http\Controllers\Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $role = ($request->id) ? Roles::find($request->id) : new Roles;
-            $role->role_name = $request->rolename;
-            $successMessage = ($request->id) ? 'Successfully Edit Role.' : 'Successfully Add Role.';
-            $failedMessage = ($request->id) ? 'Something went wrong. Failed to edit role!' : 'Something went wrong. Failed to add role!';
+            if ($request->id) {
+                $role = Roles::find($request->id);
+                $successMessage = 'Successfully edit role.';
+                $failedMessage = 'Something went wrong. Failed to edit role!';
+            } else {
+                $role = new Roles();
+                $successMessage = 'Successfully add role.';
+                $failedMessage = 'Something went wrong. Failed to add role!';
+            }
 
+            $role->role_name = $request->rolename;
             $allowedPerm = $request->allow;
             $permissions = $this->getPermissions($allowedPerm);
             $permissions = json_encode($permissions);
@@ -78,13 +100,13 @@ class RoleController extends \App\Http\Controllers\Controller
             return redirect()->back()->with('error', $failedMessage);
         }
     }
-    
+
     /**
      * Method delete
      *
      * @param int|string $id
      *
-     * @return string|null
+     * @return void
      */
     public function delete($id)
     {
@@ -97,10 +119,10 @@ class RoleController extends \App\Http\Controllers\Controller
         } catch (\Exception $e) {
             Log::channel('exceptions')->error($e);
         }
-        
+
         return redirect(route('roles'))->with('error', 'Failed delete role.');
     }
-    
+
     /**
      * Method getPermissions
      *
