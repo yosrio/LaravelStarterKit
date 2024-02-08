@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MenuList extends Model
 {
     use HasFactory;
+
     public $table = "menu_list";
     protected $fillable = [
         'menu_group',

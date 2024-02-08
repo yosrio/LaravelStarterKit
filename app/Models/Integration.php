@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Integration extends Model
 {
     use HasFactory;
+
     public $table = "integration";
     protected $fillable = [
         'token',
