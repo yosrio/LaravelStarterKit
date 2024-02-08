@@ -81,7 +81,6 @@ class SettingController extends \App\Http\Controllers\Controller
     private function grouppedConfig($configurations)
     {
         $groupedData = [];
-
         foreach ($configurations as $item) {
             $groupName = $item['group'];
             if (!isset($groupedData[$groupName])) {
@@ -94,7 +93,6 @@ class SettingController extends \App\Http\Controllers\Controller
                 'value' => $item['value']
             ];
         }
-
         return $groupedData;
     }
 }
