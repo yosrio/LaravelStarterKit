@@ -14,6 +14,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Models\Configuration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * SettingController
@@ -23,22 +26,75 @@ use Illuminate\Http\Request;
 class SettingController extends \App\Http\Controllers\Controller
 {
     /**
-     * Method index
+     * Method configuration
      *
-     * @return string|null
+     * @return void
      */
     public function configuration()
     {
-        return view('admin.setting.configuration');
+        $configurations = $this->grouppedConfig(Configuration::get());
+        return view('admin.setting.configuration', ["configurations" => $configurations]);
     }
 
     /**
-     * Method index
+     * Method configurationSave
      *
-     * @return string|null
+     * @param Request $request
+     *
+     * @return void
+     */
+    public function configurationSave(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $requestData = $request->all();
+            $configs = $requestData['configs'];
+            foreach ($configs as $key => $value) {
+                $configSave = Configuration::find($key);
+                $configSave->update(['value' => $value]);
+            }
+            DB::commit();
+            return redirect()->back()->with('success', 'Successfuly save configuration.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::channel('exceptions')->error($e);
+            return redirect()->back()->with('error', 'Something went wrong.');
+        }
+    }
+
+    /**
+     * Method integration
+     *
+     * @return void
      */
     public function integration()
     {
         return view('admin.setting.integration');
+    }
+
+    /**
+     * grouppedConfig function
+     *
+     * @param Configuration $configurations
+     * @return array
+     */
+    private function grouppedConfig($configurations)
+    {
+        $groupedData = [];
+
+        foreach ($configurations as $item) {
+            $groupName = $item['group'];
+            if (!isset($groupedData[$groupName])) {
+                $groupedData[$groupName] = [];
+            }
+            $groupedData[$groupName][] = [
+                'id' => $item['id'],
+                'name' => $item['name'],
+                'type' => $item['type'],
+                'value' => $item['value']
+            ];
+        }
+
+        return $groupedData;
     }
 }

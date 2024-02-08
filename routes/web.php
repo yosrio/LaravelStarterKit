@@ -75,5 +75,6 @@ Route::group([
     ], function () {
         Route::get('/', [Admin\SettingController::class, 'index']);
         Route::get('/configuration', [Admin\SettingController::class, 'configuration'])->name('_configuration');
+        Route::post('/configuration', [Admin\SettingController::class, 'configurationSave'])->name('_configuration_save');
         Route::get('/integration', [Admin\SettingController::class, 'integration'])->name('_integration');
 });
