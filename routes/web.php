@@ -77,4 +77,7 @@ Route::group([
         Route::get('/configuration', [Admin\SettingController::class, 'configuration'])->name('_configuration');
         Route::post('/configuration', [Admin\SettingController::class, 'configurationSave'])->name('_configuration_save');
         Route::get('/integration', [Admin\SettingController::class, 'integration'])->name('_integration');
+        Route::get('/integration/add', [Admin\SettingController::class, 'integrationAddOrUpdate'])->name('_integration_add');
+        Route::get('/integration/{id}', [Admin\SettingController::class, 'integrationAddOrUpdate'])->name('_integration_update');
+        Route::post('/integration', [Admin\SettingController::class, 'integrationSave'])->name('_integration_save');
 });

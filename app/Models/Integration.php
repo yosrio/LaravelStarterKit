@@ -39,7 +39,7 @@ class Integration extends Model
         'token',
         'user_id',
         'token_type',
-        'permssions',
+        'permissions',
         'expired_at',
     ];
 }

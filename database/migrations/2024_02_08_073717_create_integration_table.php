@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('integration', function (Blueprint $table) {
             $table->id();
-            $table->string('token');
+            $table->string('name');
+            $table->string('token')->unique();
             $table->string('token_type');
-            $table->string('permssions');
+            $table->string('permissions');
             $table->date('expired_at');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');

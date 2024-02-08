@@ -38,11 +38,9 @@
                                     <label style="font-weight: 600;" for="{{ $item['name'] }}">{{ ucwords(str_replace('_', ' ', $item['name'])) }}</label>
                                     <select class="custom-select rounded-0" name="configs[{{ $item['id'] }}]">
                                         @if((int)$item['value'] === 1)
-                                            @php echo 'test' @endphp
                                             <option value="1" selected>Enable</option>
                                             <option value="0">Disable</option>
                                         @elseif((int)$item['value'] === 0)
-                                            @php echo 'test' @endphp
                                             <option value="1">Enable</option>
                                             <option value="0" selected>Disable</option>
                                         @endif
