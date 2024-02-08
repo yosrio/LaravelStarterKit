@@ -148,8 +148,8 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                            <input type="hidden" name="id" value="{{isset($userSelected) ? $userSelected->id : ''}}" />
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <input type="hidden" name="id" value="{{isset($userSelected) ? $userSelected->id : ''}}" />
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

@@ -99,7 +99,7 @@
                     </div>
                     <div class="card-footer">
                         <input type="hidden" name="id" value="{{ isset($roleSelected) ? $roleSelected->id : '' }}" />
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

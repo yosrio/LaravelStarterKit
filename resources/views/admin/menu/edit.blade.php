@@ -136,7 +136,7 @@
                     <div class="card" style="box-shadow: none; border: none;">
                         <div class="card-footer">
                             <input type="hidden" name="id" value="{{isset($menuSelected) ? $menuSelected->id : ''}}" />
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </div>
                 </form>

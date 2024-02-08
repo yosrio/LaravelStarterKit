@@ -14,6 +14,12 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Models\Configuration;
+use App\Models\Integration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * SettingController
@@ -23,22 +29,181 @@ use Illuminate\Http\Request;
 class SettingController extends \App\Http\Controllers\Controller
 {
     /**
-     * Method index
+     * Method configuration
      *
-     * @return string|null
+     * @return void
      */
     public function configuration()
     {
-        return view('admin.setting.configuration');
+        $configurations = $this->grouppedConfig(Configuration::get());
+        return view('admin.setting.configuration', ["configurations" => $configurations]);
     }
 
     /**
-     * Method index
+     * Method configurationSave
      *
-     * @return string|null
+     * @param Request $request
+     *
+     * @return void
+     */
+    public function configurationSave(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $requestData = $request->all();
+            $configs = $requestData['configs'];
+            foreach ($configs as $key => $value) {
+                $configSave = Configuration::find($key);
+                $configSave->update(['value' => $value]);
+            }
+            DB::commit();
+            return redirect()->back()->with('success', 'Successfuly save configuration.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::channel('exceptions')->error($e);
+            return redirect()->back()->with('error', 'Something went wrong.');
+        }
+    }
+
+    /**
+     * Method integration
+     *
+     * @return void
      */
     public function integration()
     {
-        return view('admin.setting.integration');
+        $userLoggedIn = Auth::user();
+        $integrations = Integration::where('user_id',$userLoggedIn->id)->get();
+        return view('admin.setting.integration', ['integrations' => $integrations]);
+    }
+
+    /**
+     * Method integrationSave
+     *
+     * @param Request $request
+     *
+     * @return void
+     */
+    public function integrationSave(Request $request)
+    {
+        $successMessage = '';
+        $failedMessage = '';
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Log::channel('exceptions')->warning(implode('\n', $validator->errors()->all()));
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        DB::beginTransaction();
+        try {
+            $userLoggedIn = Auth::user();
+            if ($request->id) {
+                $successMessage = 'Successfully edit integration.';
+                $failedMessage = 'Something went wrong. Failed to edit integration!';
+
+                $integration = Integration::find($request->id);
+            } else {
+                $successMessage = 'Successfully edit integration.';
+                $failedMessage = 'Something went wrong. Failed to edit integration!';
+
+                $integration = new Integration();
+                $expiredTime = 2592000; #30 days
+                $expiredDate = date('Y-m-d', time() + $expiredTime);
+                $token = $this->generateToken($userLoggedIn->id, $request->token_type, $expiredTime);
+                $integration->token = $token;
+                $integration->expired_at = $expiredDate;
+                $integration->token_type = $request->token_type;
+            }
+            $integration->name = $request->name;
+            $integration->permissions = json_encode($request->allow);
+            $integration->user_id = $userLoggedIn->id;
+            if ($integration->save()) {
+                DB::commit();
+                return redirect(route('settings_integration'))->with('success', $successMessage);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::channel('exceptions')->error($e);
+            return redirect()->back()->with('error', $failedMessage);
+        }
+    }
+
+    /**
+     * Method integrationAddOrUpdate
+     *
+     * @param int|string|null $id
+     *
+     * @return void
+     */
+    public function integrationAddOrUpdate($id = null)
+    {
+        try {
+            $integrationMasterData = config('masterdataintegration');
+            if ($id != null) {
+                $integrationSelected = Integration::find($id);
+                return view('admin.setting.integration_edit', [
+                    'integrationSelected' => $integrationSelected,
+                    'integrationMasterData' => $integrationMasterData
+                ]);
+            }
+            return view('admin.setting.integration_edit', [
+                'integrationMasterData' => $integrationMasterData
+            ]);
+        } catch (\Exception $e) {
+            Log::channel('exceptions')->error($e);
+            return Redirect(route('settings_integration'));
+        }
+    }
+
+    /**
+     * grouppedConfig function
+     *
+     * @param Configuration $configurations
+     * @return array
+     */
+    private function grouppedConfig($configurations)
+    {
+        $groupedData = [];
+        foreach ($configurations as $item) {
+            $groupName = $item['group'];
+            if (!isset($groupedData[$groupName])) {
+                $groupedData[$groupName] = [];
+            }
+            $groupedData[$groupName][] = [
+                'id' => $item['id'],
+                'name' => $item['name'],
+                'type' => $item['type'],
+                'value' => $item['value']
+            ];
+        }
+        return $groupedData;
+    }
+
+    private function generateToken($user_id, $token_type, $expiration_time = 3600) {
+        $header = [
+            'alg' => 'HS256', // Algorithm yang digunakan (HMAC SHA-256)
+            'typ' => 'JWT'    // Tipe token, dalam hal ini adalah JWT
+        ];
+
+        $header = base64_encode(json_encode($header));
+
+        $payload = [
+            'user_id' => $user_id,  // Informasi pengguna atau data lain yang ingin Anda sertakan dalam token
+            'exp' => time() + $expiration_time // Waktu kadaluarsa token
+        ];
+
+        $payload = base64_encode(json_encode($payload));
+
+        // Membuat signature menggunakan HMAC SHA-256
+        $signature = hash_hmac('sha256', "$header.$payload", $token_type, true);
+        $signature = base64_encode($signature);
+
+        // Menggabungkan header, payload, dan signature untuk membentuk token
+        $token = "$header.$payload.$signature";
+
+        return $token;
     }
 }

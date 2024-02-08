@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Roles Model
+ * Integration Model
  *
  * PHP version 8.1
  *
@@ -17,11 +17,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Roles Class
+ * Integration Class
  */
-class Roles extends Model
+class Integration extends Model
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    public $table = "integration";
 
     /**
      * The attributes that are mass assignable.
@@ -29,8 +36,10 @@ class Roles extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_name',
-        'permission',
-        'store_id',
+        'token',
+        'user_id',
+        'token_type',
+        'permissions',
+        'expired_at',
     ];
 }

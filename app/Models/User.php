@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * User Model
+ *
+ * PHP version 8.1
+ *
+ * @package  App\Models
+ * @category Models
+ * @author   Yos Rio
+ * @license  http://opensource.org/licenses/MIT MIT License
+ */
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -8,9 +19,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * User Class
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
