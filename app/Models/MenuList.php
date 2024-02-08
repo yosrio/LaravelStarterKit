@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
 class MenuList extends Model
 {
     use HasFactory;
-    
+
     /**
      * The table associated with the model.
      *
