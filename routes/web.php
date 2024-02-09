@@ -46,6 +46,16 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth'],
+    'prefix' => '/profile',
+    'as' => 'profile',
+    ], function () {
+        Route::get('/', [Admin\ProfileController::class, 'index']);
+        Route::post('/save', [Admin\ProfileController::class, 'save'])->name('_save');
+        Route::post('/change-password', [Admin\ProfileController::class, 'changePassword'])->name('_change_password');
+});
+
+Route::group([
+    'middleware' => ['auth'],
     'prefix' => '/roles',
     'as' => 'roles',
     ], function () {

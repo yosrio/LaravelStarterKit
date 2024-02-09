@@ -120,6 +120,7 @@
                     <div class="card-footer">
                         <input type="hidden" name="id" value="{{isset($integrationSelected) ? $integrationSelected->id : ''}}" />
                         <button type="submit" class="btn btn-primary">Save</button>
+                        <a type="submit" href="{{ route('settings_integration') }}" class="btn btn-danger">Cancel</a>
                     </div>
                 </form>
             </div>

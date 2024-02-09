@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Laravel Starter Kit</title>
+  <title>{{ $appName->value ?? 'Laravel Starter Kit' }}</title>
+  <link rel="icon" href="{{ asset('admin/assets/dist/img/laravel.png') }}" type="image/x-icon">
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/fontawesome-free/css/all.min.css') }}">
@@ -30,7 +31,7 @@
         @include('admin.layouts.sidebar')
     </aside>
 
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="background-color: white;">
       @yield('content')
     </div>
 
