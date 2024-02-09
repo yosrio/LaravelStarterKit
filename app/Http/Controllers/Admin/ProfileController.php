@@ -58,10 +58,10 @@ class ProfileController extends \App\Http\Controllers\Controller
 
         if ($validator->fails()) {
             Log::channel('exceptions')->warning(implode('\n', $validator->errors()->all()));
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect(route('profile'))->withErrors($validator)->withInput();
         }
 
-        // DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $user = User::find($request->id);
             if (!Hash::check($request->password, $user->password)) {
@@ -78,9 +78,54 @@ class ProfileController extends \App\Http\Controllers\Controller
                 return redirect(route('profile'))->with('success', 'Successfuly update profile.');
             }
         } catch (\Exception $e) {
-            // DB::rollback();
+            DB::rollback();
             Log::channel('exceptions')->error($e);
-            return redirect()->back()->with('error', 'Something went wrong.');
+            return redirect(route('profile'))->with('error', 'Something went wrong.');
+        }
+        return;
+    }
+
+    /**
+     * Method changePassword
+     *
+     * @param Request $request
+     *
+     * @return void
+     */
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'oldPassword' => 'required',
+            'newPassword' => [
+                'required',
+                'min:8',
+                'max:64',
+                'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,64}$/'
+            ],
+            'newPasswordConfirm' => 'required|same:newPassword'
+        ]);
+
+        if ($validator->fails()) {
+            Log::channel('exceptions')->warning(implode('\n', $validator->errors()->all()));
+            return redirect(route('profile'))->withErrors($validator)->withInput();
+        }
+
+        DB::beginTransaction();
+        try {
+            $user = User::find($request->id);
+            if (!Hash::check($request->oldPassword, $user->password)) {
+                return redirect(route('profile'))->withErrors(['oldPassword' => 'Password is incorrect'])->withInput();
+            }
+            $user->password = Hash::make($request->newPassword);
+
+            if ($user->save()) {
+                DB::commit();
+                return redirect(route('profile'))->with('success', 'Successfuly change password.');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::channel('exceptions')->error($e);
+            return redirect(route('profile'))->with('error', 'Something went wrong.');
         }
         return;
     }
