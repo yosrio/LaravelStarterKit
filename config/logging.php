@@ -64,6 +64,12 @@ return [
             'level' => 'debug',
         ],
 
+        'api_exceptions' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/api/exceptions.log'),
+            'level' => 'debug',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

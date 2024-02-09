@@ -16,13 +16,27 @@ class TokenBasicAuth
      */
     public function handle($request, Closure $next)
     {
-        if (!array_key_exists('Authorization', $request->header())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!array_key_exists('authorization', $request->header())) {
+            return response()->json(
+                [
+                    'error' => [
+                        'message' => 'Unauthorized'
+                    ]
+                ],
+                401
+            );
         }
 
         $token = $request->header('Authorization');
         if (!$this->isValidToken($token)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(
+                [
+                    'error' => [
+                        'message' => 'Wrong input token'
+                    ]
+                ],
+                401
+            );
         }
 
         return $next($request);
@@ -49,6 +63,6 @@ class TokenBasicAuth
     private function getIntegrationToken($token)
     {
         $integrationToken = Integration::where('token', $token)->first('token');
-        return $integrationToken;
+        return $integrationToken->token ?? '';
     }
 }

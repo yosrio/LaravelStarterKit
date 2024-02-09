@@ -5,7 +5,12 @@ namespace App\Http;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
-{
+{    
+    /**
+     * Custom middleware
+     *
+     * @var array<int, class-string|string>
+     */
     protected $routeMiddleware = [
         'token.auth.basic' => \App\Http\Middleware\Api\Rest\TokenBasicAuth::class,
     ];

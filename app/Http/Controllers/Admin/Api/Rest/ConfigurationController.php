@@ -16,6 +16,7 @@ namespace App\Http\Controllers\Admin\Api\Rest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Configuration;
+use Illuminate\Support\Facades\Log;
 
 /**
  * ConfigurationController
@@ -26,67 +27,82 @@ class ConfigurationController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return void
      */
-    public function index()
+    public function index(Request $request)
     {
-        $configurations = $this->grouppedConfig(Configuration::get());
-        return response()->json($configurations);
+        $name = $request->input('name');
+        $group = $request->input('group');
+        try {
+            $configurations = Configuration::select(
+                'id','group','name','type','value'
+            );
+            if ($name) {
+                $configurations->where('name', $name);
+                if ($group) {
+                    $configurations->where('group', $group);
+                }
+            } elseif ($group) {
+                $configurations->where('group', $group);
+            }
+            if ($configurations->get()->isEmpty()) {
+                return response()->json(
+                    [
+                        'error' => [
+                            'message' => 'Data not found.'
+                        ]
+                    ],
+                    404
+                );
+            }
+            return response()->json($configurations->get(), 200);
+        } catch (\Exception $e) {
+            Log::channel('api_exceptions')->error($e);
+            return response()->json(
+                [
+                    'error' => [
+                        'message' => 'Internal server error. Something went wrong on the server.'
+                    ]
+                ],
+                500
+            );
+        }
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
+  
     /**
      * Display the specified resource.
+     *
+     * @param string $id
+     * @return void
      */
     public function show($id)
     {
-        $configurations = $this->grouppedConfig(Configuration::where('id', $id)->get());
-        return response()->json($configurations);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
-     * grouppedConfig function
-     *
-     * @param Configuration $configurations
-     * @return array
-     */
-    private function grouppedConfig($configurations)
-    {
-        $groupedData = [];
-        foreach ($configurations as $item) {
-            $groupName = $item['group'];
-            if (!isset($groupedData[$groupName])) {
-                $groupedData[$groupName] = [];
+        try {
+            $configurations = Configuration::select(
+                'id','group','name','type','value'
+            )->where('id', $id)->get();
+            if ($configurations->isEmpty()) {
+                return response()->json(
+                    [
+                        'error' => [
+                            'message' => 'Data not found.'
+                        ]
+                    ],
+                    404
+                );
             }
-            $groupedData[$groupName][] = [
-                'id' => $item['id'],
-                'name' => $item['name'],
-                'type' => $item['type'],
-                'value' => $item['value']
-            ];
+            return response()->json($configurations, 200);
+        } catch (\Exception $e) {
+            Log::channel('api_exceptions')->error($e);
+            return response()->json(
+                [
+                    'error' => [
+                        'message' => 'Internal server error. Something went wrong on the server.'
+                    ]
+                ],
+                500
+            );
         }
-        return $groupedData;
     }
 }

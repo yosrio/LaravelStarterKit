@@ -21,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('token.auth.basic')->group(function () {
     Route::resource('configurations', Rest\ConfigurationController::class);
+    // Route::get('configurations', [Rest\ConfigurationController::class, 'getConfigByParams']);
 });
