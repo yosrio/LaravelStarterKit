@@ -20,9 +20,9 @@
                             $menuItem = json_decode($menuSelected->menu_item, 1);
                         @endphp
                     @endif
-                    <div class="card">
+                    <div class="card card-secondary">
                         <div class="card-header">
-                            <h4>Root Menu</h4>
+                            <h3 class="card-title">Root Menu</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
@@ -109,9 +109,9 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card card-secondary">
                         <div class="card-header">
-                            <h4>Sub Menu</h4>
+                            <h3 class="card-title">Sub Menu</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
