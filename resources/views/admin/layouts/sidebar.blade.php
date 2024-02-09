@@ -1,5 +1,6 @@
-<a href="{{ route('dashboard') }}" class="brand-link" style="text-align: center;text-decoration: none;">
-  <span class="brand-text font-weight-light">Admin</span>
+<a href="{{ route('dashboard') }}" class="brand-link" style="text-decoration: none;">
+  <img src="{{ asset('admin/assets/dist/img/laravel.svg') }}" alt="{{ $adminPageTitle->value ?? 'Laravel Admin' }}" class="brand-image">
+  <span class="brand-text font-weight-light">{{ $adminPageTitle->value ?? 'Laravel Admin' }}</span>
 </a>
 <div class="sidebar">
   <!-- <div class="form-inline">
