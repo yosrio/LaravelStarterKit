@@ -5,6 +5,18 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3 style="font-weight: 600;"> User Data </h3>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a type="submit" class="btn btn-primary" href="{{ route('users_add') }}">Add User</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
                     <div class="table">
                         <table id="usersTable" class="table table-striped" style="width:100%">
                             <thead>

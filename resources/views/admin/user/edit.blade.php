@@ -12,6 +12,7 @@
     @endif
     <div class="row justify-content-start">
         <div class="col-md-12">
+            <br>
             <div class="card card-secondary">
                 <div class="card-header">
                     <h3 class="card-title"></h3>
@@ -150,6 +151,7 @@
                     <div class="card-footer">
                         <input type="hidden" name="id" value="{{isset($userSelected) ? $userSelected->id : ''}}" />
                         <button type="submit" class="btn btn-primary">Save</button>
+                        <a type="submit" href="{{ route('users') }}" class="btn btn-danger">Cancel</a>
                     </div>
                 </form>
             </div>

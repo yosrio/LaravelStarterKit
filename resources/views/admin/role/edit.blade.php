@@ -100,6 +100,7 @@
                     <div class="card-footer">
                         <input type="hidden" name="id" value="{{ isset($roleSelected) ? $roleSelected->id : '' }}" />
                         <button type="submit" class="btn btn-primary">Save</button>
+                        <a type="submit" href="{{ route('roles') }}" class="btn btn-danger">Cancel</a>
                     </div>
                 </form>
             </div>

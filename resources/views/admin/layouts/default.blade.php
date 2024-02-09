@@ -31,7 +31,7 @@
         @include('admin.layouts.sidebar')
     </aside>
 
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="background-color: white;">
       @yield('content')
     </div>
 

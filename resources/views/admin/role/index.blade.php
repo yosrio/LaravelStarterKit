@@ -5,6 +5,18 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3 style="font-weight: 600;"> Role Data </h3>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a type="submit" class="btn btn-primary" href="{{ route('roles_add') }}">Add Role</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
                     <div class="table">
                         <table id="rolesTable" class="table table-striped" style="width:100%">
                             <thead>

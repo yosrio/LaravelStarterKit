@@ -133,10 +133,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card" style="box-shadow: none; border: none;">
+                    <div class="card">
                         <div class="card-footer">
                             <input type="hidden" name="id" value="{{isset($menuSelected) ? $menuSelected->id : ''}}" />
                             <button type="submit" class="btn btn-primary">Save</button>
+                            <a type="submit" href="{{ route('menus') }}" class="btn btn-danger">Cancel</a>
                         </div>
                     </div>
                 </form>
