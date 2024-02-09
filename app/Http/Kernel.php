@@ -6,6 +6,10 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
+    protected $routeMiddleware = [
+        'token.auth.basic' => \App\Http\Middleware\Api\Rest\TokenBasicAuth::class,
+    ];
+
     /**
      * The application's global HTTP middleware stack.
      *
