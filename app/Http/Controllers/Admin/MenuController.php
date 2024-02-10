@@ -15,6 +15,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\MenuList;
+use App\Models\AdminLogActivity;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +71,9 @@ class MenuController extends \App\Http\Controllers\Controller
     {
         $successMessage = '';
         $failedMessage = '';
+        $activityDesc = '';
+        $activityType = '';
+        $activityData = [];
         $validator = Validator::make($request->all(), [
             'menu_id' => 'required',
             'menu_title' => 'required',
@@ -84,6 +88,7 @@ class MenuController extends \App\Http\Controllers\Controller
 
         DB::beginTransaction();
         try {
+            $loggedUser = Auth::user();
             $menuItem = [
                 'menu_id' => strtolower($request->menu_id),
                 'menu_title' => $request->menu_title,
@@ -97,16 +102,39 @@ class MenuController extends \App\Http\Controllers\Controller
             }
             if ($request->id) {
                 $menu = MenuList::find($request->id);
+                $oldMenu = MenuList::find($request->id);
+                $activityData[] = [
+                    'old' => $oldMenu
+                ];
+                $activityDesc = $loggedUser->name . ' edit menu named "' . ucfirst(strtolower($request->menu_id)) . '"';
+                $activityType = 'update_menu';
             } else {
                 $menu = new MenuList();
+                $activityData[] = [
+                    'old' => []
+                ];
                 $successMessage = 'Successfully add menu.';
                 $failedMessage = 'Something went wrong. Failed to add menu!';
+                $activityDesc = $loggedUser->name . ' created a new menu named "' .
+                                ucfirst(strtolower($request->menu_id)) . '"';
+                $activityType = 'create_menu';
             }
             $menu->menu_group = ucfirst(strtolower($request->menu_id));
             $menu->menu_item = json_encode($menuItem);
             $menu->sort_order = $request->sort_order;
             if ($menu->save()) {
                 DB::commit();
+                $activityData[] = [
+                    'new' =>  $menu->fresh()
+                ];
+                $activityData = json_encode($activityData);
+                AdminLogActivity::create([
+                    'user_id' => $loggedUser->id,
+                    'activity_type' => $activityType,
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                    'activity_data' => $activityData,
+                ]);
                 return redirect(route('menus'))->with('success', $successMessage);
             }
         } catch (\Exception $e) {
@@ -125,10 +153,26 @@ class MenuController extends \App\Http\Controllers\Controller
      */
     public function delete($id)
     {
+        $loggedUser = Auth::user();
         $menu = MenuList::find($id);
+        $activityData = [];
+        $oldMenu = MenuList::find($id);
 
         try {
+            $activityData = [
+                'old' => $oldMenu,
+                'new' => []
+            ];
+            $activityData = json_encode($activityData);
+            $activityDesc = $loggedUser->name . ' deleted menu "' . $menu->menu_group . '"';
             if ($menu->delete()) {
+                AdminLogActivity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity_type' => 'delete_menu',
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                    'activity_data' => $activityData,
+                ]);
                 return redirect(route('menus'))->with('success', 'Successfully delete menu.');
             }
         } catch (\Exception $e) {

@@ -1,6 +1,15 @@
 @extends('admin.layouts.default')
 @section('content')
 <div class="container mt-4">
+    @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+    </div>
+    @elseif (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+    </div>
+    @endif
     <div class="row justify-content-start">
         <div class="col-md-12">
             <div class="card">

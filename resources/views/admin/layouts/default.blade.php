@@ -60,6 +60,24 @@
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
   <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+  <!-- In your Blade view or layout file -->
+  <script>
+      var laravelTimezone = "{{ config('app.timezone') }}";
+  </script>
+
+  <!-- In the same file or another script file -->
+  <script>
+      function updateClock() {
+          var serverTime = new Date().toLocaleString('en-US', { timeZone: laravelTimezone, timeStyle: 'short' });
+          document.getElementById('clock').textContent = serverTime;
+      }
+
+      // Update the clock every second
+      setInterval(updateClock, 1000);
+
+      // Initial update
+      updateClock();
+  </script>
   @yield('scripts')
 </body>
 </html>

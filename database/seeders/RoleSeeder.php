@@ -33,6 +33,9 @@ class RoleSeeder extends Seeder
                             "menus",
                             "add_menu"
                         ],
+                        "reports" => [
+                            "admin_log"
+                        ],
                         "settings" => [
                             "configuration",
                             "integration"

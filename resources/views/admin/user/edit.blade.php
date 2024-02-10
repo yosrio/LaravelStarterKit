@@ -75,7 +75,6 @@
                                 id="password"
                                 name="password"
                                 placeholder="Password"
-                                required
                             />
                             <small class="text-muted">
                                 New password should have minimum 8 alphanumeric, uppercase, lowercase & symbol (e.g #?!@$%^&*-)

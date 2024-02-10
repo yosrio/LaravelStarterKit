@@ -16,6 +16,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Roles;
+use App\Models\AdminLogActivity;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,9 @@ class UserController extends \App\Http\Controllers\Controller
     {
         $successMessage = '';
         $failedMessage = '';
+        $activityDesc = '';
+        $activityType = '';
+        $activityData = [];
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'name' => 'required',
@@ -88,11 +92,16 @@ class UserController extends \App\Http\Controllers\Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $loggedUser = Auth::user();
         $status = $request->status == 'on' ? true : false;
         DB::beginTransaction();
         try {
             if ($request->id) {
                 $user = User::find($request->id);
+                $oldUser = User::find($request->id);
+                $activityData[] = [
+                    'old' => $oldUser
+                ];
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->username = $request->username;
@@ -114,8 +123,13 @@ class UserController extends \App\Http\Controllers\Controller
                 }
                 $successMessage = 'Successfully edit user.';
                 $failedMessage = 'Something went wrong. Failed to edit user!';
+                $activityDesc = $loggedUser->name . ' edit admin user "' . $request->username . '"';
+                $activityType = 'update_user';
             } else {
                 $user = new User();
+                $activityData[] = [
+                    'old' => []
+                ];
                 $validator = Validator::make($request->all(), [
                     'password' => [
                         'required',
@@ -138,12 +152,26 @@ class UserController extends \App\Http\Controllers\Controller
                 $user->status = $status;
                 $successMessage = 'Successfully add user.';
                 $failedMessage = 'Something went wrong. Failed to add user!';
+                $activityDesc = $loggedUser->name . ' created a new admin user, username is "' .
+                                $request->username . '"';
+                $activityType = 'create_user';
             }
             $roles = Roles::find($request->role_id);
             $user->role_id = $roles->id;
             $user->phone = $request->phone;
             if ($user->save()) {
                 DB::commit();
+                $activityData[] = [
+                    'new' =>  $user->fresh()
+                ];
+                $activityData = json_encode($activityData);
+                AdminLogActivity::create([
+                    'user_id' => $loggedUser->id,
+                    'activity_type' => $activityType,
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                    'activity_data' => $activityData,
+                ]);
                 return redirect(route('users'))->with('success', $successMessage);
             }
         } catch (\Exception $e) {
@@ -163,10 +191,19 @@ class UserController extends \App\Http\Controllers\Controller
      */
     public function delete($id)
     {
+        $activityData = [];
         $loggedUser = Auth::user();
         $user = User::find($id);
+        $oldUser = User::find($id);
 
         try {
+            $activityData = [
+                'old' => $oldUser,
+                'new' => []
+            ];
+            $activityData = json_encode($activityData);
+            $activityDesc = $loggedUser->name . ' deleted admin user "' . $oldUser->username . '"';
+
             if ($id === 1) {
                 return redirect(route('users'))->with('error', 'Failed to delete default user.');
             }
@@ -176,6 +213,13 @@ class UserController extends \App\Http\Controllers\Controller
             }
 
             if ($user->delete()) {
+                AdminLogActivity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity_type' => 'delete_user',
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                    'activity_data' => $activityData,
+                ]);
                 return redirect(route('users'))->with('success', 'Successfully delete user.');
             }
         } catch (\Exception $e) {
