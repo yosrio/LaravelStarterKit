@@ -90,6 +90,11 @@ Route::group([
         Route::get('/integration/add', [Admin\SettingController::class, 'integrationAddOrUpdate'])->name('_integration_add');
         Route::get('/integration/{id}', [Admin\SettingController::class, 'integrationAddOrUpdate'])->name('_integration_update');
         Route::post('/integration', [Admin\SettingController::class, 'integrationSave'])->name('_integration_save');
+        Route::get('/cache-management', [Admin\CacheController::class, 'cache'])->name('_cache_management');
+        Route::get('/cache-management/all', [Admin\CacheController::class, 'cacheAll'])->name('_cache_all');
+        Route::get('/cache-management/config', [Admin\CacheController::class, 'cacheConfig'])->name('_cache_config');
+        Route::get('/cache-management/route', [Admin\CacheController::class, 'cacheRoute'])->name('_cache_route');
+        Route::get('/cache-management/view', [Admin\CacheController::class, 'cacheView'])->name('_cache_view');
 });
 
 Route::group([
