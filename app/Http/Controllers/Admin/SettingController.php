@@ -16,6 +16,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\Configuration;
 use App\Models\Integration;
+use App\Models\AdminLogActivity;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -48,15 +49,26 @@ class SettingController extends \App\Http\Controllers\Controller
      */
     public function configurationSave(Request $request)
     {
+        $activityDesc = '';
+        $activityType = '';
         DB::beginTransaction();
         try {
+            $loggedUser = Auth::user();
             $requestData = $request->all();
             $configs = $requestData['configs'];
             foreach ($configs as $key => $value) {
                 $configSave = Configuration::find($key);
                 $configSave->update(['value' => $value]);
             }
+            $activityDesc = $loggedUser->name .' edit configuration';
+            $activityType = 'update_configuration';
             DB::commit();
+            AdminLogActivity::create([
+                'user_id' => $loggedUser->id,
+                'activity_type' => $activityType,
+                'activity_description' => $activityDesc,
+                'activity_date' => \Carbon\Carbon::now(),
+            ]);
             return redirect()->back()->with('success', 'Successfuly save configuration.');
         } catch (\Exception $e) {
             DB::rollback();
@@ -88,6 +100,8 @@ class SettingController extends \App\Http\Controllers\Controller
     {
         $successMessage = '';
         $failedMessage = '';
+        $activityDesc = '';
+        $activityType = '';
         $validator = Validator::make($request->all(), [
             'name' => 'required',
         ]);
@@ -103,11 +117,15 @@ class SettingController extends \App\Http\Controllers\Controller
             if ($request->id) {
                 $successMessage = 'Successfully edit integration.';
                 $failedMessage = 'Something went wrong. Failed to edit integration!';
+                $activityDesc = $userLoggedIn->name .' edit integration named "' . $request->name . '"';
+                $activityType = 'update_integration';
 
                 $integration = Integration::find($request->id);
             } else {
-                $successMessage = 'Successfully edit integration.';
-                $failedMessage = 'Something went wrong. Failed to edit integration!';
+                $successMessage = 'Successfully add integration.';
+                $failedMessage = 'Something went wrong. Failed to add integration!';
+                $activityDesc = $userLoggedIn->name .' add a new integration named "' . $request->name . '"';
+                $activityType = 'create_integration';
 
                 $integration = new Integration();
                 $expiredTime = 2592000; #30 days
@@ -122,6 +140,12 @@ class SettingController extends \App\Http\Controllers\Controller
             $integration->user_id = $userLoggedIn->id;
             if ($integration->save()) {
                 DB::commit();
+                AdminLogActivity::create([
+                    'user_id' => $userLoggedIn->id,
+                    'activity_type' => $activityType,
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                ]);
                 return redirect(route('settings_integration'))->with('success', $successMessage);
             }
         } catch (\Exception $e) {
@@ -181,8 +205,17 @@ class SettingController extends \App\Http\Controllers\Controller
         }
         return $groupedData;
     }
-
-    private function generateToken($user_id, $token_type, $expiration_time = 3600) {
+    
+    /**
+     * generateToken
+     *
+     * @param  mixed $user_id
+     * @param  string $token_type
+     * @param  mixed $expiration_time
+     * @return string
+     */
+    private function generateToken($user_id, $token_type, $expiration_time = 3600)
+    {
         $header = [
             'alg' => 'HS256', // Algorithm yang digunakan (HMAC SHA-256)
             'typ' => 'JWT'    // Tipe token, dalam hal ini adalah JWT
