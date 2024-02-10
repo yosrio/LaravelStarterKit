@@ -13,6 +13,7 @@
                                     <th>Activity Type</th>
                                     <th>Activity Description</th>
                                     <th>Activity Date</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -22,6 +23,11 @@
                                         <td>{{ $adminLog->activity_type }}</td>
                                         <td class="limited-text">{{ $adminLog->activity_description }}</td>
                                         <td>{{ date("d/m/Y H:i:s", strtotime($adminLog->activity_date)) }}</td>
+                                    <td>
+                                        <a class="btn btn-primary mr-1 btn-sm" href="{{ route('reports_adminlog_detail', $adminLog->id) }}">
+                                            View
+                                        </a>
+                                    </td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('activity_type');
-            $table->string('activity_description');
-            $table->timestamp('activity_date')->default(now());
+            $table->text('activity_description');
+            $table->text('activity_data')->nullable();
+            $table->timestamp('activity_date')->default(\Carbon\Carbon::now());
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });

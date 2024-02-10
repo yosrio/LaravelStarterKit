@@ -98,4 +98,5 @@ Route::group([
     'as' => 'reports',
     ], function () {
         Route::get('/admin-log', [Admin\AdminLogController::class, 'index'])->name('_adminlog');
+        Route::get('/admin-log/{id}', [Admin\AdminLogController::class, 'adminLogDetail'])->name('_adminlog_detail');
 });

@@ -13,6 +13,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\AdminLogActivity;
+use Illuminate\Support\Facades\Log;
+
 /**
  * AdminLogController
  *
@@ -28,5 +31,24 @@ class AdminLogController extends \App\Http\Controllers\Controller
     public function index()
     {
         return view('admin.report.adminlog');
+    }
+    
+    /**
+     * adminLogDetail
+     *
+     * @param int $id
+     * @return void
+     */
+    public function adminLogDetail($id)
+    {
+        try {
+            $adminLogSelected = AdminLogActivity::find($id);
+            return view('admin.report.adminlog_detail', [
+                'adminLogSelected' => $adminLogSelected
+            ]);
+        } catch (\Exception $e) {
+            Log::channel('exceptions')->error($e);
+            return Redirect(route('reports_adminlog'));
+        }
     }
 }

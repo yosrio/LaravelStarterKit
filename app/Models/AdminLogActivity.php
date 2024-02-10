@@ -39,6 +39,7 @@ class AdminLogActivity extends Model
         'activity_type',
         'activity_description',
         'activity_date',
+        'activity_data',
         'user_id',
     ];
 }
