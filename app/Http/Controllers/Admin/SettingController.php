@@ -102,6 +102,7 @@ class SettingController extends \App\Http\Controllers\Controller
         $failedMessage = '';
         $activityDesc = '';
         $activityType = '';
+        $activityData = [];
         $validator = Validator::make($request->all(), [
             'name' => 'required',
         ]);
@@ -121,6 +122,10 @@ class SettingController extends \App\Http\Controllers\Controller
                 $activityType = 'update_integration';
 
                 $integration = Integration::find($request->id);
+                $oldIntegration = Integration::find($request->id);
+                $activityData[] = [
+                    'old' => $oldIntegration
+                ];
             } else {
                 $successMessage = 'Successfully add integration.';
                 $failedMessage = 'Something went wrong. Failed to add integration!';
@@ -128,6 +133,9 @@ class SettingController extends \App\Http\Controllers\Controller
                 $activityType = 'create_integration';
 
                 $integration = new Integration();
+                $activityData[] = [
+                    'old' => []
+                ];
                 $expiredTime = 2592000; #30 days
                 $expiredDate = date('Y-m-d', time() + $expiredTime);
                 $token = $this->generateToken($userLoggedIn->id, $request->token_type, $expiredTime);
@@ -140,11 +148,16 @@ class SettingController extends \App\Http\Controllers\Controller
             $integration->user_id = $userLoggedIn->id;
             if ($integration->save()) {
                 DB::commit();
+                $activityData[] = [
+                    'new' =>  $integration->fresh()
+                ];
+                $activityData = json_encode($activityData);
                 AdminLogActivity::create([
                     'user_id' => $userLoggedIn->id,
                     'activity_type' => $activityType,
                     'activity_description' => $activityDesc,
                     'activity_date' => \Carbon\Carbon::now(),
+                    'activity_data' => $activityData,
                 ]);
                 return redirect(route('settings_integration'))->with('success', $successMessage);
             }

@@ -190,7 +190,7 @@ class UserController extends \App\Http\Controllers\Controller
      */
     public function delete($id)
     {
-        $activityData = '';
+        $activityData = [];
         $loggedUser = Auth::user();
         $user = User::find($id);
         $oldUser = User::find($id);
@@ -200,6 +200,8 @@ class UserController extends \App\Http\Controllers\Controller
                 'old' => $oldUser,
                 'new' => []
             ];
+            $activityData = json_encode($activityData);
+            $activityDesc = $loggedUser->name .' deleted admin user "' . $oldUser->username . '"';
 
             if ($id === 1) {
                 return redirect(route('users'))->with('error', 'Failed to delete default user.');
@@ -210,8 +212,6 @@ class UserController extends \App\Http\Controllers\Controller
             }
 
             if ($user->delete()) {
-                $activityData = json_encode($activityData);
-                $activityDesc = $loggedUser->name .' deleted admin user "' . $oldUser->username . '"';
                 AdminLogActivity::create([
                     'user_id' => Auth::user()->id,
                     'activity_type' => 'delete_user',
