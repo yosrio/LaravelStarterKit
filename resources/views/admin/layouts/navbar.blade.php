@@ -4,6 +4,11 @@
     <a class="nav-link" data-widget="pushmenu" href="#" role="button">
       <i class="fas fa-bars"></i>
     </a>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a class="nav-link">
+        <span id="clock"></span>
+      </a>
+    </li>
   </li>
 </ul>
 <ul class="navbar-nav ml-auto">
@@ -25,3 +30,6 @@
     </div>
   </li>
 </ul>
+
+@section('scripts')
+@endsection

@@ -15,8 +15,10 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\Roles;
+use App\Models\AdminLogActivity;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * RoleController
@@ -67,6 +69,8 @@ class RoleController extends \App\Http\Controllers\Controller
      */
     public function save(Request $request)
     {
+        $activityDesc = '';
+        $activityType = '';
         try {
             $validator = Validator::make($request->all(), [
                 'rolename' => ['required', 'string', 'regex:/^[^0-9]*$/'],
@@ -76,14 +80,19 @@ class RoleController extends \App\Http\Controllers\Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
+            $loggedUser = Auth::user();
             if ($request->id) {
                 $role = Roles::find($request->id);
                 $successMessage = 'Successfully edit role.';
                 $failedMessage = 'Something went wrong. Failed to edit role!';
+                $activityDesc = $loggedUser->name .' edit role named "' . $request->rolename . '"';
+                $activityType = 'update_role';
             } else {
                 $role = new Roles();
                 $successMessage = 'Successfully add role.';
                 $failedMessage = 'Something went wrong. Failed to add role!';
+                $activityDesc = $loggedUser->name .' created a new role named "' . $request->rolename . '"';
+                $activityType = 'create_role';
             }
 
             $role->role_name = $request->rolename;
@@ -93,6 +102,12 @@ class RoleController extends \App\Http\Controllers\Controller
             $role->permission = $permissions;
 
             if ($role->save()) {
+                AdminLogActivity::create([
+                    'user_id' => $loggedUser->id,
+                    'activity_type' => $activityType,
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                ]);
                 return redirect(route('roles'))->with('success', $successMessage);
             }
         } catch (\Exception $e) {
@@ -110,10 +125,18 @@ class RoleController extends \App\Http\Controllers\Controller
      */
     public function delete($id)
     {
+        $loggedUser = Auth::user();
         $roles = Roles::find($id);
 
         try {
             if ($roles->delete()) {
+                $activityDesc = $loggedUser->name .' deleted role "' . $roles->role_name . '"';
+                AdminLogActivity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity_type' => 'delete_role',
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                ]);
                 return redirect(route('roles'))->with('success', 'Successfully delete role.');
             }
         } catch (\Exception $e) {

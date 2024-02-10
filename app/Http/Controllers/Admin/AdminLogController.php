@@ -27,6 +27,6 @@ class AdminLogController extends \App\Http\Controllers\Controller
      */
     public function index()
     {
-        return view('admin.report.log_activity');
+        return view('admin.report.adminlog');
     }
 }

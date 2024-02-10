@@ -16,6 +16,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Roles;
+use App\Models\AdminLogActivity;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,8 @@ class UserController extends \App\Http\Controllers\Controller
     {
         $successMessage = '';
         $failedMessage = '';
+        $activityDesc = '';
+        $activityType = '';
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'name' => 'required',
@@ -88,6 +91,7 @@ class UserController extends \App\Http\Controllers\Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $loggedUser = Auth::user();
         $status = $request->status == 'on' ? true : false;
         DB::beginTransaction();
         try {
@@ -114,6 +118,8 @@ class UserController extends \App\Http\Controllers\Controller
                 }
                 $successMessage = 'Successfully edit user.';
                 $failedMessage = 'Something went wrong. Failed to edit user!';
+                $activityDesc = $loggedUser->name .' edit admin user "' . $request->username . '"';
+                $activityType = 'update_user';
             } else {
                 $user = new User();
                 $validator = Validator::make($request->all(), [
@@ -138,12 +144,20 @@ class UserController extends \App\Http\Controllers\Controller
                 $user->status = $status;
                 $successMessage = 'Successfully add user.';
                 $failedMessage = 'Something went wrong. Failed to add user!';
+                $activityDesc = $loggedUser->name .' created a new admin user, username is "' . $request->username . '"';
+                $activityType = 'create_user';
             }
             $roles = Roles::find($request->role_id);
             $user->role_id = $roles->id;
             $user->phone = $request->phone;
             if ($user->save()) {
                 DB::commit();
+                AdminLogActivity::create([
+                    'user_id' => $loggedUser->id,
+                    'activity_type' => $activityType,
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                ]);
                 return redirect(route('users'))->with('success', $successMessage);
             }
         } catch (\Exception $e) {
@@ -176,6 +190,13 @@ class UserController extends \App\Http\Controllers\Controller
             }
 
             if ($user->delete()) {
+                $activityDesc = $loggedUser->name .' deleted admin user "' . $user->username . '"';
+                AdminLogActivity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity_type' => 'delete_user',
+                    'activity_description' => $activityDesc,
+                    'activity_date' => \Carbon\Carbon::now(),
+                ]);
                 return redirect(route('users'))->with('success', 'Successfully delete user.');
             }
         } catch (\Exception $e) {

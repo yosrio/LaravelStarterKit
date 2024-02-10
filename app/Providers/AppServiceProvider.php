@@ -29,12 +29,14 @@ class AppServiceProvider extends ServiceProvider
                 $menuList = Models\MenuList::orderBy('sort_order')->get();
                 $appName = Models\Configuration::where('name', 'app_name')->first();
                 $adminPageTitle = Models\Configuration::where('name', 'admin_page_title')->first();
+                $adminLogs = Models\AdminLogActivity::get();
                 $view->with([
                     'currentUser'=> $user,
                     'currentUserRole'=> $userRole,
                     'menuList'=> $menuList,
                     'appName'=> $appName,
-                    'adminPageTitle'=> $adminPageTitle
+                    'adminPageTitle'=> $adminPageTitle,
+                    'adminLogs'=> $adminLogs
                 ]);
             }
         });
