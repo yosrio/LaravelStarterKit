@@ -94,6 +94,24 @@ class MenuListSeeder extends Seeder
                 'sort_order' => 40
             ],
             [
+                'menu_group' => 'Reports',
+                'menu_item' =>  json_encode([
+                    "menu_id" => "reports",
+                    "menu_title" => "Reports",
+                    "route" => "#",
+                    "icon" => "fas fa-flag",
+                    "items" =>  [
+                        [
+                            "menu_id" => "admin_log",
+                            "menu_title" => "Admin Activity",
+                            "route" => "reports_adminlog",
+                            "icon" => "fas fa-clipboard-list"
+                        ]
+                    ]
+                ]),
+                'sort_order' => 50
+            ],
+            [
                 'menu_group' => 'Settings',
                 'menu_item' =>  json_encode([
                     "menu_id" => "settings",
@@ -114,7 +132,7 @@ class MenuListSeeder extends Seeder
                         ]
                     ]
                 ]),
-                'sort_order' => 50
+                'sort_order' => 60
             ]
         ];
         MenuList::upsert($menuData, ['menu_group']);

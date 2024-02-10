@@ -91,3 +91,11 @@ Route::group([
         Route::get('/integration/{id}', [Admin\SettingController::class, 'integrationAddOrUpdate'])->name('_integration_update');
         Route::post('/integration', [Admin\SettingController::class, 'integrationSave'])->name('_integration_save');
 });
+
+Route::group([
+    'middleware' => ['auth'],
+    'prefix' => '/reports',
+    'as' => 'reports',
+    ], function () {
+        Route::get('/admin-log', [Admin\AdminLogController::class, 'index'])->name('_adminlog');
+});
