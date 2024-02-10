@@ -60,7 +60,7 @@ class SettingController extends \App\Http\Controllers\Controller
                 $configSave = Configuration::find($key);
                 $configSave->update(['value' => $value]);
             }
-            $activityDesc = $loggedUser->name .' edit configuration';
+            $activityDesc = $loggedUser->name . ' edit configuration';
             $activityType = 'update_configuration';
             DB::commit();
             AdminLogActivity::create([
@@ -85,7 +85,7 @@ class SettingController extends \App\Http\Controllers\Controller
     public function integration()
     {
         $userLoggedIn = Auth::user();
-        $integrations = Integration::where('user_id',$userLoggedIn->id)->get();
+        $integrations = Integration::where('user_id', $userLoggedIn->id)->get();
         return view('admin.setting.integration', ['integrations' => $integrations]);
     }
 
@@ -118,7 +118,7 @@ class SettingController extends \App\Http\Controllers\Controller
             if ($request->id) {
                 $successMessage = 'Successfully edit integration.';
                 $failedMessage = 'Something went wrong. Failed to edit integration!';
-                $activityDesc = $userLoggedIn->name .' edit integration named "' . $request->name . '"';
+                $activityDesc = $userLoggedIn->name . ' edit integration named "' . $request->name . '"';
                 $activityType = 'update_integration';
 
                 $integration = Integration::find($request->id);
@@ -129,7 +129,7 @@ class SettingController extends \App\Http\Controllers\Controller
             } else {
                 $successMessage = 'Successfully add integration.';
                 $failedMessage = 'Something went wrong. Failed to add integration!';
-                $activityDesc = $userLoggedIn->name .' add a new integration named "' . $request->name . '"';
+                $activityDesc = $userLoggedIn->name . ' add a new integration named "' . $request->name . '"';
                 $activityType = 'create_integration';
 
                 $integration = new Integration();
@@ -218,7 +218,7 @@ class SettingController extends \App\Http\Controllers\Controller
         }
         return $groupedData;
     }
-    
+
     /**
      * generateToken
      *

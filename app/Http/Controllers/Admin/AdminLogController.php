@@ -32,7 +32,7 @@ class AdminLogController extends \App\Http\Controllers\Controller
     {
         return view('admin.report.adminlog');
     }
-    
+
     /**
      * adminLogDetail
      *

@@ -90,7 +90,7 @@ class RoleController extends \App\Http\Controllers\Controller
                 ];
                 $successMessage = 'Successfully edit role.';
                 $failedMessage = 'Something went wrong. Failed to edit role!';
-                $activityDesc = $loggedUser->name .' edit role named "' . $request->rolename . '"';
+                $activityDesc = $loggedUser->name . ' edit role named "' . $request->rolename . '"';
                 $activityType = 'update_role';
             } else {
                 $role = new Roles();
@@ -99,7 +99,7 @@ class RoleController extends \App\Http\Controllers\Controller
                 ];
                 $successMessage = 'Successfully add role.';
                 $failedMessage = 'Something went wrong. Failed to add role!';
-                $activityDesc = $loggedUser->name .' created a new role named "' . $request->rolename . '"';
+                $activityDesc = $loggedUser->name . ' created a new role named "' . $request->rolename . '"';
                 $activityType = 'create_role';
             }
 
@@ -149,7 +149,7 @@ class RoleController extends \App\Http\Controllers\Controller
                 'new' => []
             ];
             $activityData = json_encode($activityData);
-            $activityDesc = $loggedUser->name .' deleted role "' . $roles->role_name . '"';
+            $activityDesc = $loggedUser->name . ' deleted role "' . $roles->role_name . '"';
             if ($roles->delete()) {
                 AdminLogActivity::create([
                     'user_id' => Auth::user()->id,

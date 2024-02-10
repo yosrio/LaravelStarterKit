@@ -41,9 +41,11 @@ class CacheController extends \App\Http\Controllers\Controller
     {
         try {
             Artisan::call('cache:clear');
-            return redirect(route('settings_cache_management'))->with('success', 'Successfuly to clear cache.');
+            return redirect(route('settings_cache_management'))
+                ->with('success', 'Successfuly to clear cache.');
         } catch (\Exception $e) {
-            return redirect(route('settings_cache_management'))->with('error', 'Something went wrong.');
+            return redirect(route('settings_cache_management'))
+                ->with('error', 'Something went wrong.');
         }
     }
 
@@ -56,9 +58,11 @@ class CacheController extends \App\Http\Controllers\Controller
     {
         try {
             Artisan::call('config:clear');
-            return redirect(route('settings_cache_management'))->with('success', 'Successfuly to clear cache configuration.');
+            return redirect(route('settings_cache_management'))
+                ->with('success', 'Successfuly to clear cache configuration.');
         } catch (\Exception $e) {
-            return redirect(route('settings_cache_management'))->with('error', 'Something went wrong.');
+            return redirect(route('settings_cache_management'))
+                ->with('error', 'Something went wrong.');
         }
     }
 
@@ -71,9 +75,11 @@ class CacheController extends \App\Http\Controllers\Controller
     {
         try {
             Artisan::call('route:clear');
-            return redirect(route('settings_cache_management'))->with('success', 'Successfuly to clear cache route.');
+            return redirect(route('settings_cache_management'))
+                ->with('success', 'Successfuly to clear cache route.');
         } catch (\Exception $e) {
-            return redirect(route('settings_cache_management'))->with('error', 'Something went wrong.');
+            return redirect(route('settings_cache_management'))
+                ->with('error', 'Something went wrong.');
         }
     }
 
@@ -86,9 +92,11 @@ class CacheController extends \App\Http\Controllers\Controller
     {
         try {
             Artisan::call('view:clear');
-            return redirect(route('settings_cache_management'))->with('success', 'Successfuly to clear cache view.');
+            return redirect(route('settings_cache_management'))
+                ->with('success', 'Successfuly to clear cache view.');
         } catch (\Exception $e) {
-            return redirect(route('settings_cache_management'))->with('error', 'Something went wrong.');
+            return redirect(route('settings_cache_management'))
+                ->with('error', 'Something went wrong.');
         }
     }
 }

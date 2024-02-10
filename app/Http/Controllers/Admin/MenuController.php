@@ -106,7 +106,7 @@ class MenuController extends \App\Http\Controllers\Controller
                 $activityData[] = [
                     'old' => $oldMenu
                 ];
-                $activityDesc = $loggedUser->name .' edit menu named "' . ucfirst(strtolower($request->menu_id)) . '"';
+                $activityDesc = $loggedUser->name . ' edit menu named "' . ucfirst(strtolower($request->menu_id)) . '"';
                 $activityType = 'update_menu';
             } else {
                 $menu = new MenuList();
@@ -115,7 +115,8 @@ class MenuController extends \App\Http\Controllers\Controller
                 ];
                 $successMessage = 'Successfully add menu.';
                 $failedMessage = 'Something went wrong. Failed to add menu!';
-                $activityDesc = $loggedUser->name .' created a new menu named "' . ucfirst(strtolower($request->menu_id)) . '"';
+                $activityDesc = $loggedUser->name . ' created a new menu named "' .
+                                ucfirst(strtolower($request->menu_id)) . '"';
                 $activityType = 'create_menu';
             }
             $menu->menu_group = ucfirst(strtolower($request->menu_id));
@@ -163,7 +164,7 @@ class MenuController extends \App\Http\Controllers\Controller
                 'new' => []
             ];
             $activityData = json_encode($activityData);
-            $activityDesc = $loggedUser->name .' deleted menu "' . $menu->menu_group . '"';
+            $activityDesc = $loggedUser->name . ' deleted menu "' . $menu->menu_group . '"';
             if ($menu->delete()) {
                 AdminLogActivity::create([
                     'user_id' => Auth::user()->id,

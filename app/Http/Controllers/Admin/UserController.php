@@ -123,7 +123,7 @@ class UserController extends \App\Http\Controllers\Controller
                 }
                 $successMessage = 'Successfully edit user.';
                 $failedMessage = 'Something went wrong. Failed to edit user!';
-                $activityDesc = $loggedUser->name .' edit admin user "' . $request->username . '"';
+                $activityDesc = $loggedUser->name . ' edit admin user "' . $request->username . '"';
                 $activityType = 'update_user';
             } else {
                 $user = new User();
@@ -152,7 +152,8 @@ class UserController extends \App\Http\Controllers\Controller
                 $user->status = $status;
                 $successMessage = 'Successfully add user.';
                 $failedMessage = 'Something went wrong. Failed to add user!';
-                $activityDesc = $loggedUser->name .' created a new admin user, username is "' . $request->username . '"';
+                $activityDesc = $loggedUser->name . ' created a new admin user, username is "' .
+                                $request->username . '"';
                 $activityType = 'create_user';
             }
             $roles = Roles::find($request->role_id);
@@ -201,7 +202,7 @@ class UserController extends \App\Http\Controllers\Controller
                 'new' => []
             ];
             $activityData = json_encode($activityData);
-            $activityDesc = $loggedUser->name .' deleted admin user "' . $oldUser->username . '"';
+            $activityDesc = $loggedUser->name . ' deleted admin user "' . $oldUser->username . '"';
 
             if ($id === 1) {
                 return redirect(route('users'))->with('error', 'Failed to delete default user.');

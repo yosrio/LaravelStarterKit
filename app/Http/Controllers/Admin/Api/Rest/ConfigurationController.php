@@ -35,9 +35,7 @@ class ConfigurationController extends Controller
         $name = $request->input('name');
         $group = $request->input('group');
         try {
-            $configurations = Configuration::select(
-                'id','group','name','type','value'
-            );
+            $configurations = Configuration::select('id', 'group', 'name', 'type', 'value');
             if ($name) {
                 $configurations->where('name', $name);
                 if ($group) {
@@ -69,7 +67,7 @@ class ConfigurationController extends Controller
             );
         }
     }
-  
+
     /**
      * Display the specified resource.
      *
@@ -79,9 +77,8 @@ class ConfigurationController extends Controller
     public function show($id)
     {
         try {
-            $configurations = Configuration::select(
-                'id','group','name','type','value'
-            )->where('id', $id)->get();
+            $configurations = Configuration::select('id', 'group', 'name', 'type', 'value')
+                                ->where('id', $id)->get();
             if ($configurations->isEmpty()) {
                 return response()->json(
                     [
