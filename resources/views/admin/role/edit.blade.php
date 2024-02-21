@@ -21,7 +21,7 @@
                     <div class="card-body">
                             <div class="form-group">
                                 <label for="rolename">Role Name</label>
-                                <input type="text" class="form-control" id="rolename" name="rolename" aria-label="Role Name" value="<?php echo (isset($roleSelected) ? $roleSelected->role_name : '') ?>">
+                                <input type="text" class="form-control" id="rolename" name="rolename" aria-label="Role Name" value="<?php echo (isset($roleSelected) ? $roleSelected->role_name : old('rolename')) ?>">
                             </div>
                             @error('rolename')
                             <div class="alert alert-danger">{{ $message }}</div>

@@ -17,7 +17,7 @@
                 <div class="card-header">
                     <h3 class="card-title"></h3>
                 </div>
-                <form method="POST" action="{{ route('users_save') }}">
+                <form id="userForm" method="POST" action="{{ route('users_save') }}">
                     @csrf
                     <div class="card-body">
                         <div class="form-group">
@@ -27,7 +27,7 @@
                                 class="form-control"
                                 id="name" name="name"
                                 placeholder="Enter name"
-                                value="{{ isset($userSelected) ? $userSelected->name : '' }}"
+                                value="{{ isset($userSelected) ? $userSelected->name : old('name') }}"
                                 required
                             />
                         </div>
@@ -43,7 +43,7 @@
                                 id="username" 
                                 name="username" 
                                 placeholder="Enter username" 
-                                value="{{ isset($userSelected) ? $userSelected->username : '' }}" 
+                                value="{{ isset($userSelected) ? $userSelected->username : old('username') }}" 
                                 required
                             />
                         </div>
@@ -59,7 +59,7 @@
                                 id="email"
                                 name="email"
                                 placeholder="Enter email"
-                                value="{{ isset($userSelected) ? $userSelected->email : '' }}" 
+                                value="{{ isset($userSelected) ? $userSelected->email : old('email') }}" 
                                 required
                             />
                         </div>
@@ -92,7 +92,7 @@
                                 id="phone"
                                 name="phone" 
                                 placeholder="Enter phone number"
-                                value="{{ isset($userSelected) ? $userSelected->phone : '' }}" 
+                                value="{{ isset($userSelected) ? $userSelected->phone : old('phone') }}" 
                             />
                         </div>
                         @error('phone')
@@ -127,7 +127,7 @@
                                 id="address"
                                 name="address"
                                 placeholder="Enter address"
-                            >{{ isset($userSelected) ? $userSelected->address : '' }}</textarea>
+                            >{{ isset($userSelected) ? $userSelected->address : old('address') }}</textarea>
                         </div>
                         @error('address')
                             <div class="alert alert-danger">{{ $message }}</div>
