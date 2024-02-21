@@ -1,11 +1,27 @@
 <?php
+
+/**
+ * AuthController
+ *
+ * PHP version 8.1
+ *
+ * @package  App\Http\Controllers\Admin
+ * @category Controllers
+ * @author   Yos Rio
+ * @license  http://opensource.org/licenses/MIT MIT License
+ */
+
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * AuthController Class
+ *
+ * This controller handles login & logout feature.
+ */
 class AuthController extends \App\Http\Controllers\Controller
 {
     /**
@@ -15,7 +31,7 @@ class AuthController extends \App\Http\Controllers\Controller
      */
     public function index()
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             return redirect(route('dashboard'));
         }
 
@@ -35,13 +51,13 @@ class AuthController extends \App\Http\Controllers\Controller
             'username' => 'required',
             'password' => 'required',
         ]);
-    
+
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
             return redirect()->intended(route('dashboard'))->withSuccess('Signed in');
         }
-        
+
         return redirect(route("login"))->withError('Login details are not valid');
     }
 
@@ -50,7 +66,8 @@ class AuthController extends \App\Http\Controllers\Controller
      *
      * @return string|null
      */
-    public function logout() {
+    public function logout()
+    {
         Session::flush();
         Auth::logout();
 

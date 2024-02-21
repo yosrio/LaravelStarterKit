@@ -16,10 +16,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h3 style="font-weight: 600;"> User Data </h3>
+                            <h3 style="font-weight: 600;"> Menu Data </h3>
                         </div>
                         <div class="col-md-6 text-right">
-                            <a type="submit" class="btn btn-primary" href="{{ route('users_add') }}">Add User</a>
+                            <a type="submit" class="btn btn-primary" href="{{ route('menus_add') }}">Add Menu</a>
                         </div>
                     </div>
                 </div>
@@ -27,36 +27,29 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table">
-                        <table id="usersTable" class="table table-striped" style="width:100%">
+                        <table id="menusTable" class="table table-striped" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Username</th>
-                                    <th>Status</th>
+                                    <th>Menu Id</th>
+                                    <th>Menu Name</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($users as $user)
+                                @foreach($menuList as $menu)
+                                @php
+                                    $menuItem = json_decode($menu->menu_item, 1);
+                                @endphp
                                 <tr>
-                                    <td scope="row">{{ $user->id }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->username }}</td>
+                                    <td scope="row">{{ $menu->id }}</td>
+                                    <td>{{ strtolower($menu->menu_group) }}</td>
+                                    <td>{{ $menuItem['menu_title'] }}</td>
                                     <td>
-                                        @if ($user->status === 1)
-                                        <span style="color: green;">Active</span>
-                                        @else
-                                        <span style="color: red;">Inactive</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-primary mr-1 btn-sm" href="{{ route('users_update', $user->id) }}">
+                                        <a class="btn btn-primary mr-1 btn-sm" href="{{ route('menus_update', $menu->id) }}">
                                             Edit
                                         </a>
-                                        <a class="btn btn-danger deleteItem btn-sm" href="#modalDelete" data-toggle="modal" data-href="{{ route('users_delete', $user->id) }}">
+                                        <a class="btn btn-danger deleteItem btn-sm" href="#modalDelete" data-toggle="modal" data-href="{{ route('menus_delete', $menu->id) }}">
                                             Delete
                                         </a>
                                     </td>
@@ -75,11 +68,11 @@
     <div class="modal-dialog modal-confirm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Delete user</h4>
+                <h4 class="modal-title">Delete menu</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete user data?</p>
+                <p>Are you sure you want to delete menu data?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
@@ -93,7 +86,7 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
-        $('#usersTable').DataTable({
+        $('#menusTable').DataTable({
             "columnDefs": [{
                 "sortable": false
             }]

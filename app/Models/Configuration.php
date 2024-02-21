@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Roles Model
+ * Configuration Model
  *
  * PHP version 8.1
  *
@@ -17,11 +17,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Roles Class
+ * Configuration Class
  */
-class Roles extends Model
+class Configuration extends Model
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    public $table = "configuration";
 
     /**
      * The attributes that are mass assignable.
@@ -29,8 +36,8 @@ class Roles extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_name',
-        'permission',
-        'store_id',
+        'group',
+        'name',
+        'value',
     ];
 }

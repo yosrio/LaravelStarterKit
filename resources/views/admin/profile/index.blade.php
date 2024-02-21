@@ -15,9 +15,9 @@
             <br>
             <div class="card card-secondary">
                 <div class="card-header">
-                    <h3 class="card-title"></h3>
+                    <h3 class="card-title">Edit Profile</h3>
                 </div>
-                <form method="POST" action="{{ route('users_save') }}">
+                <form method="POST" action="{{ route('profile_save') }}">
                     @csrf
                     <div class="card-body">
                         <div class="form-group">
@@ -27,7 +27,7 @@
                                 class="form-control"
                                 id="name" name="name"
                                 placeholder="Enter name"
-                                value="{{ isset($userSelected) ? $userSelected->name : '' }}"
+                                value="{{ $currentUser->name }}"
                                 required
                             />
                         </div>
@@ -43,7 +43,7 @@
                                 id="username" 
                                 name="username" 
                                 placeholder="Enter username" 
-                                value="{{ isset($userSelected) ? $userSelected->username : '' }}" 
+                                value="{{ $currentUser->username }}" 
                                 required
                             />
                         </div>
@@ -59,28 +59,11 @@
                                 id="email"
                                 name="email"
                                 placeholder="Enter email"
-                                value="{{ isset($userSelected) ? $userSelected->email : '' }}" 
+                                value="{{ $currentUser->email }}" 
                                 required
                             />
                         </div>
                         @error('email')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
-
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="password"
-                                name="password"
-                                placeholder="Password"
-                            />
-                            <small class="text-muted">
-                                New password should have minimum 8 alphanumeric, uppercase, lowercase & symbol (e.g #?!@$%^&*-)
-                            </small>
-                        </div>
-                        @error('password')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
 
@@ -92,33 +75,13 @@
                                 id="phone"
                                 name="phone" 
                                 placeholder="Enter phone number"
-                                value="{{ isset($userSelected) ? $userSelected->phone : '' }}" 
+                                value="{{ $currentUser->phone }}" 
                             />
                         </div>
                         @error('phone')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
 
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label>Role</label>
-                                    <select class="custom-select" id="role_id" name="role_id" >
-                                        @foreach($roles as $role)
-                                            @if (isset($userSelected) && ($userSelected->role_id === $role->id))
-                                                <option value="{{ $role->id }}" selected>
-                                                    {{ $role->role_name }}
-                                                </option>
-                                            @else
-                                                <option value="{{ $role->id }}">
-                                                    {{ $role->role_name }}
-                                                </option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label>Address (optional)</label>
                             <textarea
@@ -127,30 +90,94 @@
                                 id="address"
                                 name="address"
                                 placeholder="Enter address"
-                            >{{ isset($userSelected) ? $userSelected->address : '' }}</textarea>
+                            >{{ $currentUser->address }}</textarea>
                         </div>
                         @error('address')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
 
                         <div class="form-group">
-                            <label>Status</label>
-                            <div class="custom-control custom-switch">
+                            <label for="password">Password</label>
                             <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                id="status"
-                                name="status"
-                                {{ isset($userSelected) && $userSelected->status ?  'checked' : '' }}
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                name="password"
+                                placeholder="Password"
+                                required
                             />
-                            <label class="custom-control-label" for="status"></label>
-                            </div>
                         </div>
+                        @error('password')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="card-footer">
-                        <input type="hidden" name="id" value="{{isset($userSelected) ? $userSelected->id : ''}}" />
+                        <input type="hidden" name="id" value="{{ $currentUser->id }}" />
                         <button type="submit" class="btn btn-primary">Save</button>
-                        <a type="submit" href="{{ route('users') }}" class="btn btn-danger">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-16">
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title">Change Password</h3>
+                </div>
+                <form method="POST" action="{{ route('profile_change_password') }}">
+                    @csrf
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="oldPassword">Old Password</label>
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="oldPassword"
+                                name="oldPassword"
+                                placeholder=""
+                                required
+                            />
+                        </div>
+                        @error('oldPassword')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="newPassword"
+                                name="newPassword"
+                                placeholder=""
+                                required
+                            />
+                            <small class="text-muted">
+                                New password should have minimum 8 alphanumeric, uppercase, lowercase & symbol (e.g #?!@$%^&*-)
+                            </small>
+                        </div>
+                        @error('newPassword')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+
+                        <div class="form-group">
+                            <label for="newPasswordConfirm">New Password Confirmation</label>
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="newPasswordConfirm"
+                                name="newPasswordConfirm"
+                                placeholder=""
+                                required
+                            />
+                        </div>
+                        @error('newPasswordConfirm')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="card-footer">
+                        <input type="hidden" name="id" value="{{ $currentUser->id }}" />
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

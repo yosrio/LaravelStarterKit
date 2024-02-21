@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Roles Model
+ * AdminLogActivity Model
  *
  * PHP version 8.1
  *
@@ -17,11 +17,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Roles Class
+ * AdminLogActivity Class
  */
-class Roles extends Model
+class AdminLogActivity extends Model
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    public $table = "admin_log_activity";
 
     /**
      * The attributes that are mass assignable.
@@ -29,8 +36,10 @@ class Roles extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_name',
-        'permission',
-        'store_id',
+        'activity_type',
+        'activity_description',
+        'activity_date',
+        'activity_data',
+        'user_id',
     ];
 }

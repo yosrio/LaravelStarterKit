@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Laravel Starter Kit</title>
+  <title>{{ $appName->value ?? 'Laravel Starter Kit' }}</title>
+  <link rel="icon" href="{{ asset('admin/assets/dist/img/laravel.png') }}" type="image/x-icon">
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/fontawesome-free/css/all.min.css') }}">
@@ -15,6 +16,9 @@
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/daterangepicker/daterangepicker.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/summernote/summernote-bs4.min.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+  @yield('css')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -27,13 +31,13 @@
         @include('admin.layouts.sidebar')
     </aside>
 
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="background-color: white;">
       @yield('content')
     </div>
 
-    <footer class="main-footer">
+    <!-- <footer class="main-footer">
         @include('admin.layouts.footer')
-    </footer>
+    </footer> -->
   </div>
 
   <script src="{{ asset('admin/assets/plugins/jquery/jquery.min.js') }}"></script>
@@ -53,6 +57,27 @@
   <script src="{{ asset('admin/assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
   <script src="{{ asset('admin/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
   <script src="{{ asset('admin/assets/dist/js/adminlte.js') }}"></script>
-  <!-- <script src="{{ asset('admin/assets/dist/js/pages/dashboard3.js') }}"></script> -->
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+  <!-- In your Blade view or layout file -->
+  <script>
+      var laravelTimezone = "{{ config('app.timezone') }}";
+  </script>
+
+  <!-- In the same file or another script file -->
+  <script>
+      function updateClock() {
+          var serverTime = new Date().toLocaleString('en-US', { timeZone: laravelTimezone, timeStyle: 'short' });
+          document.getElementById('clock').textContent = serverTime;
+      }
+
+      // Update the clock every second
+      setInterval(updateClock, 1000);
+
+      // Initial update
+      updateClock();
+  </script>
+  @yield('scripts')
 </body>
 </html>

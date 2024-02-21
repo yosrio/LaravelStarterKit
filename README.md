@@ -4,7 +4,7 @@
 <p>3.Run <code>cp .env.example .env</code></p>
 <p>4.Run <code>php artisan key:generate</code></p>
 <p>5.Change database cred at .env</p>
-<p>6.Run <code>php artisan migrate</code></p>
+<p>6.Run <code>php artisan migrate --seed</code></p>
 <p>7.Run <code>php artisan serve</code></p>
 
 <hr>

@@ -4,6 +4,11 @@
     <a class="nav-link" data-widget="pushmenu" href="#" role="button">
       <i class="fas fa-bars"></i>
     </a>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a class="nav-link">
+        <span id="clock"></span>
+      </a>
+    </li>
   </li>
 </ul>
 <ul class="navbar-nav ml-auto">
@@ -14,7 +19,7 @@
       <i class="fas fa-user"></i>
     </a>
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-      <a href="#" class="dropdown-item">
+      <a href="{{ route('profile') }}" class="dropdown-item">
         <i class="fas fa-user-cog mr-2"></i> Profile Settings
       </a>
       <div class="dropdown-divider"></div>
@@ -25,3 +30,6 @@
     </div>
   </li>
 </ul>
+
+@section('scripts')
+@endsection
