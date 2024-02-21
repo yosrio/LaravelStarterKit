@@ -78,7 +78,8 @@ class MenuController extends \App\Http\Controllers\Controller
             'menu_id' => 'required',
             'menu_title' => 'required',
             'route' => 'required',
-            'icon' => 'required'
+            'icon' => 'required',
+            'sort_order' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {

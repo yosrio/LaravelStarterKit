@@ -32,7 +32,7 @@
                                     class="form-control"
                                     id="menu_id" name="menu_id"
                                     placeholder="users"
-                                    value="{{ isset($menuSelected) ? $menuItem['menu_id'] : '' }}" 
+                                    value="{{ isset($menuSelected) ? $menuItem['menu_id'] : old('menu_id') }}" 
                                     required
                                 />
                             </div>
@@ -47,7 +47,7 @@
                                     class="form-control"
                                     id="menu_title" name="menu_title"
                                     placeholder="User Management"
-                                    value="{{ isset($menuSelected) ? $menuItem['menu_title'] : '' }}" 
+                                    value="{{ isset($menuSelected) ? $menuItem['menu_title'] : old('menu_title') }}" 
                                     required
                                 />
                             </div>
@@ -62,7 +62,7 @@
                                     class="form-control"
                                     id="route" name="route"
                                     placeholder="users"
-                                    value="{{ isset($menuSelected) ? $menuItem['route'] : '' }}" 
+                                    value="{{ isset($menuSelected) ? $menuItem['route'] : old('route') }}" 
                                     required
                                 />
                                 <small class="text-muted">
@@ -82,7 +82,7 @@
                                     class="form-control"
                                     id="icon" name="icon"
                                     placeholder="fas fa-users"
-                                    value="{{ isset($menuSelected) ? $menuItem['icon'] : '' }}" 
+                                    value="{{ isset($menuSelected) ? $menuItem['icon'] : old('icon') }}" 
                                     required
                                 />
                                 <small class="text-muted">
@@ -100,9 +100,12 @@
                                     class="form-control"
                                     id="sort_order" name="sort_order"
                                     placeholder="10"
-                                    value="{{ isset($menuSelected) ? $menuSelected['sort_order'] : '' }}" 
+                                    value="{{ isset($menuSelected) ? $menuSelected['sort_order'] : old('sort_order') }}"
                                     required
                                 />
+                                <small class="text-muted">
+                                    Numeric only
+                                </small>
                             </div>
                             @error('sort_order')
                                 <div class="alert alert-danger">{{ $message }}</div>
