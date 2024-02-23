@@ -1,5 +1,5 @@
 <a href="{{ route('dashboard') }}" class="brand-link" style="text-decoration: none;">
-  <img src="{{ asset('admin/assets/dist/img/laravel.png') }}" alt="{{ $adminPageTitle->value ?? 'Laravel Admin' }}" class="brand-image">
+  <img src="{{ $adminLogo->value != '' ? asset('storage/'.$adminLogo->value) : asset('admin/assets/dist/img/laravel.png') }}" alt="{{ $adminPageTitle->value ?? 'Laravel Admin' }}" class="brand-image">
   <span class="brand-text font-weight-light">{{ $adminPageTitle->value ?? 'Laravel Admin' }}</span>
 </a>
 <div class="sidebar">
