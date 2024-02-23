@@ -15,6 +15,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Image;
 
 /**
  * Configuration Class
@@ -40,4 +41,12 @@ class Configuration extends Model
         'name',
         'value',
     ];
+
+    public static function storeImage($image)
+    {
+        $filename = time() . '.' . $image->getClientOriginalExtension();
+        $image->storeAs('public/admin/images', $filename);
+
+        // return self::create(['filename' => $filename]);
+    }
 }

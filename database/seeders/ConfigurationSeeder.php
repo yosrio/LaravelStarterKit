@@ -25,6 +25,18 @@ class ConfigurationSeeder extends Seeder
                 'name' => 'admin_page_title',
                 'value' => 'Administrator',
                 'type' => 'string'
+            ],
+            [
+                'group' => 'General',
+                'name' => 'favicon',
+                'value' => '',
+                'type' => 'image'
+            ],
+            [
+                'group' => 'General',
+                'name' => 'admin_logo',
+                'value' => '',
+                'type' => 'image'
             ]
         ];
         DB::table('configuration')->insert($configData);
