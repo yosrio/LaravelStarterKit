@@ -105,3 +105,12 @@ Route::group([
         Route::get('/admin-log', [Admin\AdminLogController::class, 'index'])->name('_adminlog');
         Route::get('/admin-log/{id}', [Admin\AdminLogController::class, 'adminLogDetail'])->name('_adminlog_detail');
 });
+
+Route::group([
+    'prefix' => '/webhook',
+    'as' => 'webhook',
+    ], function () {
+        Route::post('/product-create', [Admin\Webhook\Shopify\ProductCreate::class, 'handle']);
+        Route::post('/product-update', [Admin\Webhook\Shopify\ProductUpdate::class, 'handle']);
+        Route::post('/customer-subscribe-email', [Admin\Webhook\Shopify\CustomerSubscribeEmail::class, 'handle']);
+});

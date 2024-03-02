@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Support\Facades\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -33,6 +34,7 @@ class Handler extends ExceptionHandler
         if ($this->isHttpException($e)) {
             return $this->renderHttpException($e);
         } else {
+            Log::channel('laravel')->error($e);
             return response()->view('error', [], 500);
         }
     }
