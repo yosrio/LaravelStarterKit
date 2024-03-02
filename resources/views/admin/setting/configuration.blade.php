@@ -12,7 +12,7 @@
                     {{ session('error') }}
                 </div>
             @endif
-            <form method="POST" action="{{ route('settings_configuration_save') }}">
+            <form method="POST" action="{{ route('settings_configuration_save') }}" enctype="multipart/form-data">
                 @csrf
                 @foreach($configurations as $key => $items)
                     <div class="card">
@@ -46,6 +46,31 @@
                                         @endif
                                     </select>
                                 </div>
+                                @elseif(strcasecmp($item['type'], 'image') === 0)
+                                <div class="form-group">
+                                    @php
+                                        $itemId = $item['id'];
+                                        $itemValue = $item['value'];
+                                    @endphp
+                                    <label for="image">{{ ucwords(str_replace('_', ' ', $item['name'])) }}</label>
+                                    <input 
+                                        type="file"
+                                        class="form-control-file"
+                                        name="imageConfigs[{{ $item['id'] }}]"
+                                        id="imageConfigs[{{ $item['id'] }}]"
+                                        accept="image/*"
+                                        onchange="previewImage('imageConfigs[{{ $itemId }}]')"
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <img
+                                        id="previewimageConfigs[{{ $item['id'] }}]"
+                                        src="{{ $item['value'] != '' ? asset('storage/'.$itemValue) : asset('admin/assets/dist/img/placeholder_100x100.png') }}"
+                                        class="img-fluid"
+                                        style="max-width: 100px; max-height: 100px;"
+                                        alt="placeholder"
+                                    >
+                                </div>
                                 @endif
                             @endforeach
                         </div>
@@ -60,4 +85,26 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script>
+  function previewImage(elementId) {
+    var preview = document.getElementById('preview'+elementId);
+    var fileInput = document.getElementById(elementId);
+    var file = fileInput.files[0];
+    
+    if (file) {
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+        alert('else');
+      preview.src = "{{ asset('admin/assets/dist/img/placeholder_100x100.png') }}";
+    }
+  }
+</script>
+
 @endsection

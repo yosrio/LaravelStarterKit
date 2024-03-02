@@ -51,6 +51,7 @@ class SettingController extends \App\Http\Controllers\Controller
     {
         $activityDesc = '';
         $activityType = '';
+
         DB::beginTransaction();
         try {
             $loggedUser = Auth::user();
@@ -59,6 +60,19 @@ class SettingController extends \App\Http\Controllers\Controller
             foreach ($configs as $key => $value) {
                 $configSave = Configuration::find($key);
                 $configSave->update(['value' => $value]);
+            }
+            $images = $request->file('imageConfigs');
+            if ($images) {
+                foreach ($images as $key => $value) {
+                    $extension = $value->getClientOriginalExtension();
+                    $namaFileBaru = time() . '.' . $extension;
+                    $path = $value->storeAs('public/admin/images', $namaFileBaru);
+                    $segments = explode('/', $path);
+                    array_shift($segments);
+                    $newPath = implode('/', $segments);
+                    $configSave = Configuration::find($key);
+                    $configSave->update(['value' => $newPath]);
+                }
             }
             $activityDesc = $loggedUser->name . ' edit configuration';
             $activityType = 'update_configuration';
